@@ -726,7 +726,9 @@ private canReportBattery() {
 }
 
 def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd) {
-	def val = (cmd.batteryLevel == 0xFF ? 1 : cmd.batteryLevel)
+	def val = (cmd.batteryLevel == 0xFF ? 17 : (safeToInt(cmd.batteryLevel, 0) * 2 + 20))
+	// mikew99x: bump up the battery levels above the minimum and log the adjustment
+	logDebug "Battery level ${cmd.batteryLevel} becomes ${val}"
 	if (val > 100) {
 		val = 100
 	}
